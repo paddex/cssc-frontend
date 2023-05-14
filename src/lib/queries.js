@@ -8,16 +8,18 @@ export const serversQuery = () => ({
 
     return json;
   },
+  refetchInterval: 1000,
 });
 
-export const playerQuery = () => ({
-  queryKey: ["players"],
+export const mapsQuery = (id) => ({
+  queryKey: [id, "maps"],
   queryFn: async () => {
-    const url = `/api/servers/${id}/players`;
+    const url = `/api/servers/${id}/maps`;
 
     const data = await fetch(url);
     const json = await data.json();
 
     return json;
   },
+  enabled: id != "",
 });

@@ -14,7 +14,7 @@ function App({ title }) {
           <h1 className="text-2xl text-white font-extrabold">new Quade App</h1>
         </span>
       </header>
-      <main className="flex w-full h-[calc(100vh_-_3rem)] items-stretch">
+      <main className="flex flex-col w-full h-[calc(100vh_-_3rem)] items-stretch">
         <Outlet />
       </main>
     </>

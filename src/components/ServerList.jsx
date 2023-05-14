@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ImSpinner2 } from "react-icons/im";
 
 import { serversQuery } from "../lib/queries";
@@ -14,11 +14,11 @@ const ServerListEntry = ({ server }) => {
   return (
     <tr
       className={`${
-        selectedServer == server.name
+        selectedServer == server.id
           ? "bg-blue-700 text-white border-blue-900"
           : "even:bg-gray-100 border-gray-300"
       } w-full border-t border-b`}
-      onClick={() => setSelectedServer(server.name)}
+      onClick={() => setSelectedServer(server.id)}
     >
       <td className="px-2 py-1">
         {server.info.Name} ({server.name})
@@ -36,18 +36,30 @@ const ServerListEntry = ({ server }) => {
 const ServerList = () => {
   const { isLoading, isError, error, data } = useQuery(serversQuery());
 
+  const { setSelectedServer } = useContext(ServerContext);
+
+  useEffect(() => {
+    if (!isLoading && !isError) {
+      if (data.length > 0) {
+        setSelectedServer(data[0].id);
+      }
+    }
+  }, [isLoading]);
+
   if (isLoading) {
     return (
       <div className="w-full h-full flex justify-center items-center">
-        <ImSpinner2 />
+        <ImSpinner2 className="animate-spin text-4xl text-slate-700" />
       </div>
     );
   }
 
   if (isError) {
-    <div className="w-full h-full flex justify-center items-center">
-      <p>An Error occured while fetching the server data: {error.message}</p>
-    </div>;
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <p>An Error occured while fetching the server data: {error.message}</p>
+      </div>
+    );
   }
 
   return (
